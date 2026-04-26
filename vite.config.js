@@ -18,5 +18,13 @@ export default ({ mode, command, ssrBuild, isSsrBuild }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
+    server: {
+      proxy: {
+        "/api": {
+          target: process.env.VITE_API_TARGET || "http://localhost:8787",
+          changeOrigin: true,
+        },
+      },
+    },
   });
 };
