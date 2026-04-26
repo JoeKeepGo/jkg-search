@@ -1,11 +1,12 @@
 <template>
   <div class="my-container">
     <div class="search-container" id="searchContainer">
-      <h1 class="search-title" @click="goHome">Luxirty Search</h1>
+      <h1 class="search-title" @click="goHome">{{ siteTitle }}</h1>
       <div class="gcse-searchbox"></div>
     </div>
     <div class="search-result-zone">
       <div class="gcse-searchresults" data-linkTarget="_blank" data-refinementStyle="link"></div>
+      <p v-if="cseError" class="cse-error">{{ cseError }}</p>
     </div>
     <footer>
       <p>
@@ -19,26 +20,43 @@
 </template>
 
 <script>
+import { loadGoogleCse } from '@/lib/google-cse'
+import { getGooglePseSettings } from '@/lib/settings'
+
 export default {
   name: 'SearchPage',
   props: ['query'],
-  mounted() {
-    this.loadGoogleCSE();
-    this.setupResultsRenderedCallback();  // 注册渲染结果回调函数
+  data() {
+    return {
+      siteTitle: 'Luxirty Search',
+      cseError: ''
+    }
+  },
+  async mounted() {
     if (!this.query) {
       this.goHome();
+      return
+    }
+
+    const settings = await getGooglePseSettings()
+    this.siteTitle = settings.siteTitle
+    this.setupResultsRenderedCallback();  // 注册渲染结果回调函数
+
+    if (!settings.cx) {
+      this.cseError = 'Google PSE CX 尚未配置'
+      return
+    }
+
+    try {
+      await loadGoogleCse(settings.cx, window.__gcse || {})
+    } catch {
+      this.cseError = 'Google PSE 加载失败'
     }
   },
   methods: {
-    loadGoogleCSE() {
-      const script = document.createElement('script');
-      script.src = `https://cse.google.com/cse.js?cx=${import.meta.env.VITE_GOOGLE_CSE_CX}`;
-      script.async = true;
-      document.head.appendChild(script);
-    },
     setTitle() {
-      var inputContent = document.getElementsByName('search')[0].value;
-      document.title = inputContent + ' - Luxirty Search'
+      const inputContent = document.getElementsByName('search')[0]?.value || this.query;
+      document.title = inputContent + ' - ' + this.siteTitle
     },
     goHome() {
       // 使用 window.location.href 跳转到根路径
@@ -130,6 +148,11 @@ export default {
 .search-result-zone {
   flex-grow: 1;
   /* 让搜索结果区占据剩余空间 */
+}
+
+.cse-error {
+  margin: 24px 28px;
+  color: var(--uv-styles-color-text-de-emphasis);
 }
 
 /* Footer styles */

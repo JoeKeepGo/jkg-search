@@ -4,10 +4,11 @@
       <a href="https://luxirty.com/posts/luxirty-search/" target="_blank">关于</a>
     </div>
     <div class="logo">
-      Luxirty Search
+      {{ siteTitle }}
     </div>
     <div class="search-container">
       <div class="gcse-searchbox-only" data-resultsUrl="search"></div>
+      <p v-if="cseError" class="cse-error">{{ cseError }}</p>
     </div>
     
     <!-- 添加页脚 -->
@@ -23,12 +24,31 @@
 </template>
 
 <script>
+import { loadGoogleCse } from '@/lib/google-cse'
+import { getGooglePseSettings } from '@/lib/settings'
+
 export default {
-  mounted() {
-    const script = document.createElement('script');
-    script.src = `https://cse.google.com/cse.js?cx=${import.meta.env.VITE_GOOGLE_CSE_CX}`;
-    script.async = true;
-    document.body.appendChild(script);
+  data() {
+    return {
+      siteTitle: 'Luxirty Search',
+      cseError: ''
+    }
+  },
+  async mounted() {
+    const settings = await getGooglePseSettings()
+    this.siteTitle = settings.siteTitle
+    document.title = settings.siteTitle
+
+    if (!settings.cx) {
+      this.cseError = 'Google PSE CX 尚未配置'
+      return
+    }
+
+    try {
+      await loadGoogleCse(settings.cx)
+    } catch {
+      this.cseError = 'Google PSE 加载失败'
+    }
   }
 };
 </script>
@@ -54,7 +74,14 @@ export default {
   top: calc(35vh + 100px); /* 相应地调整，保持与 logo 的相对位置 */
   width: 100%;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+}
+
+.cse-error {
+  margin-top: 16px;
+  color: var(--uv-styles-color-text-de-emphasis);
 }
 
 /* 针对小屏幕的样式 */
