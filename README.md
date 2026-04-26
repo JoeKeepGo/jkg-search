@@ -71,51 +71,84 @@ Luxirty Search 基于 Google 的可编程自定义搜索引擎(Google cse)，允
 
 # 部署
 
-本质上而言，这是一个简单的 vue3 + vite 项目，因此你应该可以方便地将它部署到任何你喜欢的托管网站，例如 GitHub Pages、netfliy、Cloudflare Pages、vercel之类的。
+本项目现在仍然保留 Vue 3 + Vite 的轻量前端，但增加了一个很小的 Node API，用 SQLite 保存运行时配置和管理员会话。因此如果需要后台配置能力，请部署为 Node 服务，而不是纯静态站点。
 
-当然你也可以将其部署在自己的服务器上。
+Google PSE Element 仍然是主搜索源。SQLite 中没有配置 `google_pse_cx` 时，会回退到环境变量 `VITE_GOOGLE_CSE_CX`。
 
-无论你喜欢哪种方式，都只需要查看 vite 部署教程: https://cn.vitejs.dev/guide/static-deploy
+## 后台配置版
 
-(可选)如果你想使用自己的cse，只需设置环境变量 `VITE_GOOGLE_CSE_CX` ，从这里创建你的 cse 并获取 cx： https://programmablesearchengine.google.com/about/
+### 初始化管理员
+
+不提供开放注册，也没有默认密码。首次启动前用环境变量创建单管理员账户：
+
+```sh
+ADMIN_USERNAME=admin ADMIN_PASSWORD=change-me-please pnpm init:admin
+```
+
+密码会使用 bcrypt 哈希后写入 SQLite，不会明文保存。默认数据库路径是 `./data/app.sqlite`，可以用 `DATA_DIR` 或 `DATABASE_URL` 覆盖。
+
+### 配置 Google PSE CX
+
+1. 从 Google Programmable Search Engine 获取 `cx`：https://programmablesearchengine.google.com/about/
+2. 启动应用后访问 `/login` 登录。
+3. 进入 `/admin/settings` 修改 `Google PSE CX`。
+4. 保存后配置写入 SQLite，重新打开搜索页即可生效，无需重新 build。
+
+如果 SQLite 中没有配置 `google_pse_cx`，应用会使用 `VITE_GOOGLE_CSE_CX` 作为 fallback。
 
 注意：
 1. 如果你使用自己创建的 cse，那么的部署看起来会有区别，页面上的“For Program”等标签是通过 cse 的 “优化” 功能配置的。你需要先添加域名，然后添加对应标签，并在标签中选中想提升的域名。
 2. 你还需要修改 opensearch.xml 中的域名，详细请看 https://github.com/KoriIku/luxirty-search/issues/14
+3. PSE Element 所需的 `cx` 会暴露给前端，这是 Google PSE 前端嵌入的正常参数。不要把 API key、管理员密码等敏感配置放到前端环境变量里。
 
-## 一键部署(推荐)
-### Deploy with Vercel
-(搜索页404的问题已修复)
+### DuckDuckGo 补充
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKoriIku%2Fluxiry-search&project-name=luxirty-search&repository-name=luxirty-search)
+后台有 `duckduckgo_enabled` 开关。开启后只会暴露 `/api/ddg?q=xxx`，并调用 DuckDuckGo Instant Answer API。它只是轻量补充，不爬 DuckDuckGo HTML 搜索结果，也不替代 Google PSE 搜索结果。
 
-### Deploy to Netlify
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/KoriIku/luxirty-search)
+## 运行
 
-### Docker 运行 （感谢 @shadowofmoo）
-`docker run --rm  -p 80:80  ghcr.io/koriiku/luxirty-search`
+### 本地开发
+
+```sh
+pnpm install
+cp .env.example .env
+ADMIN_USERNAME=admin ADMIN_PASSWORD=change-me-please pnpm init:admin
+pnpm dev
+```
+
+`pnpm dev` 会同时启动 Node API 和 Vite。前端开发服务器通过 Vite proxy 访问同源 `/api`。
+
+### 生产运行
+
+```sh
+pnpm install
+pnpm build
+ADMIN_USERNAME=admin ADMIN_PASSWORD=change-me-please pnpm init:admin
+pnpm start
+```
+
+默认监听 `PORT=8787`。生产环境默认启用 `Secure` session cookie；如果你在纯 HTTP 环境测试，可以显式设置 `COOKIE_SECURE=false`。
+
+### Docker
+
+```sh
+docker build -t jkg-search .
+docker run --rm -p 8787:8787 -v jkg-search-data:/app/data jkg-search
+```
+
+首次运行容器前后都可以用同一份挂载的数据目录执行 `pnpm init:admin` 创建管理员。请不要把默认密码写进镜像或源码。
 
 # 开发
 
 ## 参考资料
 唯一要看的参考资料：[https://developers.google.com/custom-search/docs/element](https://developers.google.com/custom-search/docs/element)
 
-## 在本地调试
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
+## 常用命令
 
 ```sh
 pnpm dev
-```
-
-### Compile and Minify for Production
-
-```sh
 pnpm build
+pnpm start
 ```
 
 
