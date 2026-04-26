@@ -1,30 +1,48 @@
 <template>
-  <div class="my-container">
-    <div class="search-container" id="searchContainer">
-      <h1 class="search-title" @click="goHome">{{ siteTitle }}</h1>
-      <div class="gcse-searchbox"></div>
-    </div>
-    <div class="search-result-zone">
+  <main class="search-results-page">
+    <header class="results-header" id="searchContainer">
+      <Button class="search-title" variant="ghost" @click="goHome">
+        {{ siteTitle }}
+      </Button>
+      <Card class="results-search-card">
+        <div class="gcse-searchbox"></div>
+      </Card>
+      <Button as="a" href="/login" variant="outline">
+        <Settings :size="16" />
+        后台
+      </Button>
+    </header>
+
+    <section class="search-result-zone">
       <div class="gcse-searchresults" data-linkTarget="_blank" data-refinementStyle="link"></div>
       <p v-if="cseError" class="cse-error">{{ cseError }}</p>
-    </div>
-    <footer>
-      <p>
-        &copy; Create by <a href="https://luxirty.com/posts/luxirty-search/" target="_blank">Luxirty</a> with &hearts; |
-        Open Source on <a href="https://github.com/KoriIku/luxiry-search" target="_blank">
-          GitHub
-        </a>
-      </p>
+    </section>
+
+    <footer class="public-footer">
+      <span>
+        Create by <a href="https://luxirty.com/posts/luxirty-search/" target="_blank">Luxirty</a>
+      </span>
+      <span>
+        Open Source on <a href="https://github.com/KoriIku/luxiry-search" target="_blank">GitHub</a>
+      </span>
     </footer>
-  </div>
+  </main>
 </template>
 
 <script>
+import { Settings } from 'lucide-vue-next'
 import { loadGoogleCse } from '@/lib/google-cse'
 import { getGooglePseSettings } from '@/lib/settings'
+import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue'
 
 export default {
   name: 'SearchPage',
+  components: {
+    Button,
+    Card,
+    Settings
+  },
   props: ['query'],
   data() {
     return {
@@ -89,139 +107,82 @@ export default {
 };
 </script>
 <style scoped>
-.my-container {
+.search-results-page {
   display: flex;
   flex-direction: column;
-  /* 让子元素垂直排列 */
   min-height: 100vh;
-  /* 让容器占满整个视窗高度 */
-  max-width: var(--center-width);
   min-width: 320px;
   box-sizing: border-box;
+  color: var(--foreground);
+  background: var(--background);
 }
 
-.search-container {
+.results-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  margin-top: 26px;
-  margin-left: 28px;
-  min-height: 48px;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 92%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 .search-title {
-  font-size: 24px;
-  color: #58636f;
-  margin-right: 20px;
-  white-space: nowrap;
-  user-select: none;
-  /* 防止标题文字被选中 */
+  flex: 0 0 auto;
+  color: var(--foreground);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.results-search-card {
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
 }
 
 /* 针对小屏幕的样式 */
 @media (max-width: 600px) {
-  .search-container {
+  .results-header {
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    margin-left: 0px;
-    min-height: 48px;
-    width: 100vw;
+    align-items: stretch;
+    padding: 12px;
+    gap: 10px;
   }
 
   .search-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-    margin-right: 0;
-  }
-}
-
-/* 黑暗模式样式 */
-@media (prefers-color-scheme: dark) {
-  .search-title {
-    color: #d1d5db;
-    /* 黑暗模式下的颜色 */
+    align-self: center;
   }
 }
 
 .search-result-zone {
   flex-grow: 1;
-  /* 让搜索结果区占据剩余空间 */
+  padding: 28px 0 0;
 }
 
 .cse-error {
-  margin: 24px 28px;
-  color: var(--uv-styles-color-text-de-emphasis);
+  width: min(760px, calc(100vw - 32px));
+  margin: 24px auto;
+  color: var(--muted-foreground);
 }
 
-/* Footer styles */
-footer {
-  background-color: #f8f9fa;
-  text-align: center;
-  padding: 10px 0;
+.public-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  border-top: 1px solid var(--border);
+  padding: 16px;
   font-size: 14px;
-  color: #6c757d;
-  border-top: 1px solid #dee2e6;
+  color: var(--muted-foreground);
   margin-top: 36px;
 }
 
-/* 链接样式 */
-footer a {
-  color: #156bc8; /* 白天模式下的鲜明蓝色 */
-  font-weight: bold; /* 加粗字体 */
-  transition: color 0.3s ease, text-shadow 0.3s ease; /* 添加文本阴影过渡 */
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-  footer {
-    background-color: #1a1a1a; /* 深色背景 */
-  }
-  
-  footer a {
-    color: #ffffff; /* 明亮的链接颜色 */
-  }
-}
-
-/* 鼠标悬停效果 */
-footer a:hover {
-  color: #0056b3; /* 鼠标悬停时的深蓝色 */
-  text-decoration: underline; /* 添加下划线 */
-  text-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 鼠标悬停时添加阴影 */
-}
-
-footer img {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-top;
-  margin-right: 3px;
-  opacity: 0.8;
-}
-
-@media (prefers-color-scheme: dark) {
-  footer {
-    background-color: #222222;
-    /* 深色背景 */
-    color: #cccccc;
-    /* 浅灰色字体，确保可读性 */
-    border-top: 1px solid #444444;
-    /* 深色边框 */
-  }
-
-  footer a {
-    color: #80a0c2;
-    /* 链接颜色改为浅色 */
-  }
-
-  footer a:hover {
-    color: #a0c3e0;
-    /* 悬停时的链接颜色略微加亮 */
-  }
-
-  footer img {
-    opacity: 0.9;
-    /* 提高图像的亮度，适应深色背景 */
-  }
+.public-footer a {
+  color: var(--foreground);
+  font-weight: 600;
 }
 </style>

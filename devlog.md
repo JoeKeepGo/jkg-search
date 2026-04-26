@@ -170,3 +170,27 @@ COOKIE_SECURE=false pnpm start
 - README has been updated with initialization, Google PSE CX configuration, dev startup, production startup, Docker, and DuckDuckGo limitations.
 - `.env` was already tracked in the original repo. Do not accidentally commit real secrets there.
 - If future work needs current context, read this file first.
+
+## 2026-04-26: Public search UI shadcn alignment
+
+Goal: make the public search experience match the admin shadcn-style design system while keeping search usable without login.
+
+Changes:
+
+- `src/components/Home.vue` now uses local shadcn-style `Button` and `Card` components.
+- `src/components/Results.vue` now uses the same public shell, `Button`, and `Card` components.
+- Public search routes remain unauthenticated:
+  - `/`
+  - `/search`
+- Admin routes remain the only guarded routes:
+  - `/admin`
+  - `/admin/settings`
+- Google PSE Element containers are preserved:
+  - `.gcse-searchbox-only` on home
+  - `.gcse-searchbox` and `.gcse-searchresults` on results
+- `src/assets/main.css` updates Google CSE input, button, and result card styling to use shadcn design tokens such as `--background`, `--foreground`, `--card`, `--border`, `--input`, `--primary`, and `--ring`.
+
+Verification:
+
+- `pnpm build` passed after the UI changes.
+- `git diff --check` passed.

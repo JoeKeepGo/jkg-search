@@ -392,10 +392,11 @@ a,
 }
 
 .gsc-search-button-v2 {
-  border-radius: 25px !important;
+  border-radius: 6px !important;
   padding: 10px 20px !important;
-  background-color: var(--uv-styles-color-primary) !important;
+  background-color: var(--primary) !important;
   border: none !important;
+  color: var(--primary-foreground) !important;
 }
 
 .gsc-search-button-v2:hover {
@@ -407,10 +408,10 @@ a,
   z-index: 3;
   position: relative;
   min-height: 44px;
-  border: 1px solid transparent;
-  background: #fff;
-  box-shadow: 0 2px 5px 1px rgba(64, 60, 67, .16);
-  border-radius: 24px;
+  border: 1px solid var(--input);
+  background: var(--background);
+  box-shadow: none;
+  border-radius: 8px;
   margin: 0 auto;
   padding-left: 12px;
   padding-right: 12px;
@@ -419,10 +420,10 @@ a,
 }
 
 .gsc-search-box-tools:hover {
-  background: #fff;
-  box-shadow: 0 2px 8px 1px rgba(64, 60, 67, .24);
-  border-color: transparent;
-  border-radius: 24px;
+  background: var(--background);
+  box-shadow: none;
+  border-color: var(--ring);
+  border-radius: 8px;
 }
 
 /* 针对小屏幕的样式 */
@@ -434,12 +435,9 @@ a,
 
 @media (prefers-color-scheme: dark) {
   .gsc-search-box.gsc-search-box-tools {
-    background: #333333;
-    /* 改为深色背景 */
-    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, .3);
-    /* 调整阴影颜色，适配深色背景 */
-    border: 1px solid #555555;
-    /* 使用深灰色边框来代替透明 */
+    background: var(--background);
+    box-shadow: none;
+    border: 1px solid var(--input);
   }
 
   .gsc-input-box .gsc-input,
@@ -449,23 +447,25 @@ a,
   }
 
   .gsc-search-button-v2 {
-    background-color: #444444 !important;
-    /* 按钮背景设为深灰色或其他深色 */
+    background-color: var(--primary) !important;
   }
 }
 
 
 /* 修改搜索结果样式 */
 .gsc-result {
-  background-color: transparent !important;
-  border: none !important;
+  background-color: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  margin-bottom: 12px !important;
+  padding: 16px !important;
 }
 
 .gsc-results,
 .gsc-webResult {
   background-color: transparent !important;
   width: 652px !important;
-  margin-left: 218px;
+  margin-left: calc((100vw - 652px) / 2);
 }
 
 /* 针对小屏幕的样式 */
@@ -545,13 +545,13 @@ a,
 }
 
 .gsc-refinementBlock {
-  margin-left: 218px;
+  margin-left: calc((100vw - 652px) / 2);
   background-color: transparent !important;
 }
 
 .gsc-above-wrapper-area-container {
   width: 652px !important;
-  margin-left: 218px;
+  margin-left: calc((100vw - 652px) / 2);
 }
 
 /* 针对小屏幕的样式 */

@@ -1,33 +1,51 @@
 <template>
-  <div class="home">
-    <div class="about">
-      <a href="https://luxirty.com/posts/luxirty-search/" target="_blank">关于</a>
-    </div>
-    <div class="logo">
-      {{ siteTitle }}
-    </div>
-    <div class="search-container">
-      <div class="gcse-searchbox-only" data-resultsUrl="search"></div>
-      <p v-if="cseError" class="cse-error">{{ cseError }}</p>
-    </div>
-    
-    <!-- 添加页脚 -->
-    <footer>
-      <p>
-        &copy; Create by <a href="https://luxirty.com/about/" target="_blank">Luxirty</a> with Love |
-        Open Source on <a href="https://github.com/KoriIku/luxiry-search" target="_blank">
-          GitHub
-        </a>
-      </p>
+  <main class="search-home">
+    <header class="public-nav">
+      <Button as="a" href="https://luxirty.com/posts/luxirty-search/" target="_blank" variant="ghost">
+        关于
+      </Button>
+      <Button as="a" href="/login" variant="outline">
+        <Settings :size="16" />
+        后台
+      </Button>
+    </header>
+
+    <section class="home-search-panel">
+      <div class="home-title-block">
+        <h1>{{ siteTitle }}</h1>
+        <p>基于 Google Programmable Search Element 的轻量搜索。</p>
+      </div>
+
+      <Card class="public-search-card">
+        <div class="gcse-searchbox-only" data-resultsUrl="search"></div>
+        <p v-if="cseError" class="cse-error">{{ cseError }}</p>
+      </Card>
+    </section>
+
+    <footer class="public-footer">
+      <span>
+        Create by <a href="https://luxirty.com/about/" target="_blank">Luxirty</a>
+      </span>
+      <span>
+        Open Source on <a href="https://github.com/KoriIku/luxiry-search" target="_blank">GitHub</a>
+      </span>
     </footer>
-  </div>
+  </main>
 </template>
 
 <script>
+import { Settings } from 'lucide-vue-next'
 import { loadGoogleCse } from '@/lib/google-cse'
 import { getGooglePseSettings } from '@/lib/settings'
+import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue'
 
 export default {
+  components: {
+    Button,
+    Card,
+    Settings
+  },
   data() {
     return {
       siteTitle: 'Luxirty Search',
@@ -54,109 +72,89 @@ export default {
 </script>
 
 <style scoped>
-.home {
-  position: relative;
-  height: 100vh;
+.search-home {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  color: var(--foreground);
+  background: var(--background);
 }
 
-.logo {
-  position: absolute;
-  top: 35vh; /* 从 30vh 增加到 35vh */
+.public-nav {
+  width: min(960px, 100%);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.home-search-panel {
+  width: min(760px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin: auto 0;
+}
+
+.home-title-block {
+  display: grid;
+  gap: 10px;
+  text-align: center;
+}
+
+.home-title-block h1 {
+  color: var(--foreground);
   font-size: 48px;
-  font-weight: bold;
+  line-height: 1.1;
+  font-weight: 700;
 }
 
-.search-container {
-  position: absolute;
-  top: calc(35vh + 100px); /* 相应地调整，保持与 logo 的相对位置 */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.home-title-block p {
+  color: var(--muted-foreground);
+  font-size: 16px;
+}
+
+.public-search-card {
+  width: min(720px, 100%);
+  padding: 18px;
 }
 
 .cse-error {
   margin-top: 16px;
-  color: var(--uv-styles-color-text-de-emphasis);
+  text-align: center;
+  color: var(--muted-foreground);
 }
 
-/* 针对小屏幕的样式 */
+.public-footer {
+  width: min(960px, 100%);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 20px 0 4px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.public-footer a {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
 @media (max-width: 600px) {
-  .logo {
-    font-size: 35px;
-    top: 37vh; /* 从 30vh 增加到 35vh */
-  }
-  .search-container {
-    top: calc(37vh + 80px);
-  }
-}
-
-.about {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.about a {
-  text-decoration: none;
-  font-size: 16px;
-  color: var(--uv-styles-color-text-default);
-}
-
-/* 新增的页脚样式 */
-footer {
-  position: absolute;
-  bottom: 20px; /* 离底部20px */
-  text-align: center; /* 居中对齐 */
-  width: 100%; /* 宽度为100% */
-  font-size: 14px; /* 字体大小 */
-  color: var(--uv-styles-color-text-default); /* 使用与其他文本一致的颜色 */
-}
-
-/* 链接样式 */
-footer a {
-  color: #156bc8; /* 白天模式下的鲜明蓝色 */
-  font-weight: bold; /* 加粗字体 */
-  transition: color 0.3s ease, text-shadow 0.3s ease; /* 添加文本阴影过渡 */
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-  footer {
-    background-color: #1a1a1a; /* 深色背景 */
-  }
-  
-  footer a {
-    color: #ffffff; /* 明亮的链接颜色 */
-  }
-}
-
-/* 鼠标悬停效果 */
-footer a:hover {
-  color: #0056b3; /* 鼠标悬停时的深蓝色 */
-  text-decoration: underline; /* 添加下划线 */
-  text-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 鼠标悬停时添加阴影 */
-}
-
-/* 鼠标悬停效果 - 深色模式 */
-@media (prefers-color-scheme: dark) {
-  footer a {
-    color: #80a0c2;
-    /* 链接颜色改为浅色 */
+  .search-home {
+    padding: 16px;
   }
 
-  footer a:hover {
-    color: #a0c3e0;
-    /* 悬停时的链接颜色略微加亮 */
+  .public-nav {
+    justify-content: space-between;
   }
 
-  footer img {
-    opacity: 0.9;
-    /* 提高图像的亮度，适应深色背景 */
+  .home-title-block h1 {
+    font-size: 36px;
   }
 }
 </style>
