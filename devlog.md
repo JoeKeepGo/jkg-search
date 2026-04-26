@@ -214,3 +214,21 @@ Verification:
 
 - `pnpm build` passed.
 - `git diff --check` passed.
+
+## 2026-04-26: Restore Google CSE searchbox behavior
+
+Issue: replacing the visible Google CSE searchbox with a local `Input + Button` broke Google CSE autocomplete, Enter submit, and search button behavior. It also exposed a bug in the local shadcn-style `Input` component: it did not emit `update:modelValue`, so `v-model` was not reliable.
+
+Fix:
+
+- Restored Google CSE's native searchbox on `/` via `.gcse-searchbox-only`.
+- Restored Google CSE's native searchbox on `/search` via `.gcse-searchbox`.
+- Kept Google CSE result rendering via `.gcse-searchresults`.
+- Kept theme toggle and public shadcn-style shell around the native CSE widgets.
+- Fixed `src/components/ui/Input.vue` to support `v-model` with `modelValue` and `update:modelValue`.
+
+Important future note: do not replace the visible CSE searchbox unless autocomplete and CSE submit behavior are reimplemented or deliberately removed. For this project, preserving Google PSE Element behavior is the priority.
+
+Verification:
+
+- `pnpm build` passed.

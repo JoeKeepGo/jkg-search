@@ -21,13 +21,7 @@
       </div>
 
       <div class="public-search-surface">
-        <form class="public-search-form" @submit.prevent="submitSearch">
-          <Search :size="18" class="search-form-icon" />
-          <Input v-model="searchQuery" :placeholder="`搜索 ${siteTitle}`" autocomplete="off" autofocus />
-          <Button type="submit">
-            搜索
-          </Button>
-        </form>
+        <div class="gcse-searchbox-only" data-resultsUrl="search"></div>
         <p v-if="cseError" class="cse-error">{{ cseError }}</p>
       </div>
     </section>
@@ -44,23 +38,20 @@
 </template>
 
 <script>
-import { Search, Settings } from 'lucide-vue-next'
+import { Settings } from 'lucide-vue-next'
+import { loadGoogleCse } from '@/lib/google-cse'
 import { getGooglePseSettings } from '@/lib/settings'
 import Button from '@/components/ui/Button.vue'
-import Input from '@/components/ui/Input.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 
 export default {
   components: {
     Button,
-    Input,
-    Search,
     Settings,
     ThemeToggle
   },
   data() {
     return {
-      searchQuery: '',
       siteTitle: 'Luxirty Search',
       cseError: ''
     }
@@ -72,13 +63,13 @@ export default {
 
     if (!settings.cx) {
       this.cseError = 'Google PSE CX 尚未配置'
+      return
     }
-  },
-  methods: {
-    submitSearch() {
-      const query = this.searchQuery.trim()
-      if (!query) return
-      this.$router.push({ path: '/search', query: { q: query } })
+
+    try {
+      await loadGoogleCse(settings.cx)
+    } catch {
+      this.cseError = 'Google PSE 加载失败'
     }
   }
 };
@@ -152,23 +143,6 @@ export default {
   min-height: 54px;
 }
 
-.public-search-form {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  border: 1px solid var(--input);
-  border-radius: 8px;
-  background: var(--card);
-  padding: 8px;
-}
-
-.search-form-icon {
-  color: var(--muted-foreground);
-  margin-left: 4px;
-}
-
 .cse-error {
   margin-top: 16px;
   text-align: center;
@@ -208,13 +182,5 @@ export default {
     flex-shrink: 0;
   }
 
-  .public-search-form {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .public-search-form .ui-button {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
 }
 </style>

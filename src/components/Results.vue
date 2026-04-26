@@ -5,13 +5,7 @@
         {{ siteTitle }}
       </Button>
       <div class="results-search-surface">
-        <form class="results-search-form" @submit.prevent="submitSearch">
-          <Search :size="18" class="search-form-icon" />
-          <Input v-model="searchQuery" autocomplete="off" />
-          <Button type="submit">
-            搜索
-          </Button>
-        </form>
+        <div class="gcse-searchbox"></div>
       </div>
       <div class="results-actions">
         <ThemeToggle />
@@ -39,19 +33,16 @@
 </template>
 
 <script>
-import { Search, Settings } from 'lucide-vue-next'
+import { Settings } from 'lucide-vue-next'
 import { loadGoogleCse, renderGoogleCse } from '@/lib/google-cse'
 import { getGooglePseSettings } from '@/lib/settings'
 import Button from '@/components/ui/Button.vue'
-import Input from '@/components/ui/Input.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 
 export default {
   name: 'SearchPage',
   components: {
     Button,
-    Input,
-    Search,
     Settings,
     ThemeToggle
   },
@@ -168,23 +159,6 @@ export default {
   min-width: 0;
 }
 
-.results-search-form {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  border: 1px solid var(--input);
-  border-radius: 8px;
-  background: var(--card);
-  padding: 8px;
-}
-
-.search-form-icon {
-  color: var(--muted-foreground);
-  margin-left: 4px;
-}
-
 .results-actions {
   display: flex;
   align-items: center;
@@ -208,14 +182,6 @@ export default {
     justify-content: center;
   }
 
-  .results-search-form {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .results-search-form .ui-button {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
 }
 
 .search-result-zone {
