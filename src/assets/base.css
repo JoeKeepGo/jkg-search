@@ -51,6 +51,22 @@
   --uv-styles-color-visited-link: #551A8B;
 
   --divider-color: #dfe1e5;
+
+  --background: #ffffff;
+  --foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --border: #d1d5db;
+  --input: #e5e7eb;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --ring: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,6 +88,22 @@
     --uv-styles-color-visited-link: #c58af9;
 
     --divider-color: #3f4145;
+
+    --background: #0f1115;
+    --foreground: #f4f4f5;
+    --muted: #1f2937;
+    --muted-foreground: #a1a1aa;
+    --card: #171a21;
+    --card-foreground: #f4f4f5;
+    --border: #2f3542;
+    --input: #2f3542;
+    --primary: #f4f4f5;
+    --primary-foreground: #111827;
+    --secondary: #242936;
+    --secondary-foreground: #f4f4f5;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --ring: #60a5fa;
   }
 }
 
