@@ -347,16 +347,9 @@ a,
 
 @media (hover: hover) {}
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    width: 100%;
-  }
+#app {
+  width: 100%;
+  min-height: 100vh;
 }
 
 .gsc-refinementsArea {
@@ -382,6 +375,18 @@ a,
   padding: 0 !important;
 }
 
+.gsc-control-cse table,
+.gsc-control-cse tbody,
+.gsc-control-cse tr,
+.gsc-control-cse td {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.gsc-search-box {
+  margin-bottom: 0 !important;
+}
+
 .gsc-input-box {
   border: none !important;
   border-width: 0 !important;
@@ -389,6 +394,26 @@ a,
   background: none !important;
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+.gsc-input {
+  padding: 0 !important;
+}
+
+.gsc-input table,
+.gsc-input tbody,
+.gsc-input tr,
+.gsc-input td {
+  background: transparent !important;
+}
+
+.gsc-input input {
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+
+.gsc-input input::placeholder {
+  color: var(--muted-foreground) !important;
 }
 
 .gsc-input-box .gsc-input,
@@ -399,19 +424,29 @@ a,
 }
 
 .gsc-search-button-v2 {
+  min-width: 44px !important;
+  height: 36px !important;
   border-radius: 6px !important;
-  padding: 10px 20px !important;
+  padding: 0 14px !important;
   background-color: var(--primary) !important;
   border: none !important;
   color: var(--primary-foreground) !important;
+  box-shadow: none !important;
+  transition: opacity 0.15s ease, transform 0.15s ease !important;
 }
 
 .gsc-search-button-v2:hover {
   cursor: pointer !important;
+  opacity: 0.9 !important;
+}
+
+.gsc-search-button-v2 svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: currentColor !important;
 }
 
 .gsc-search-box.gsc-search-box-tools {
-  display: flex;
   z-index: 3;
   position: relative;
   min-height: 44px;
@@ -420,10 +455,11 @@ a,
   box-shadow: none;
   border-radius: 8px;
   margin: 0 auto;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 8px;
   width: min(692px, 100%);
-  height: 46px;
+  height: auto;
+  border-spacing: 0 !important;
+  border-collapse: separate !important;
 }
 
 .gsc-search-box-tools:hover {
@@ -431,6 +467,23 @@ a,
   box-shadow: none;
   border-color: var(--ring);
   border-radius: 8px;
+}
+
+.gsc-search-box-tools:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 18%, transparent);
+}
+
+.gsc-search-box-tools .gsc-input {
+  padding-right: 8px !important;
+}
+
+.gsc-search-box-tools td.gsc-input {
+  width: 100% !important;
+}
+
+.gsc-search-box-tools td.gsc-search-button {
+  width: 1% !important;
 }
 
 /* 针对小屏幕的样式 */
@@ -467,6 +520,10 @@ a,
   padding: 16px !important;
 }
 
+.gsc-webResult.gsc-result {
+  overflow: hidden !important;
+}
+
 .gsc-results,
 .gsc-webResult {
   background-color: transparent !important;
@@ -496,11 +553,11 @@ a,
 .gs-title,
 .gs-title b {
 
-  font-family: var(--fr-font-family), var(--fr-font-basefont) !important;
-  -webkit-text-stroke: var(--fr-font-stroke) !important;
+  font-family: inherit !important;
+  -webkit-text-stroke: 0 !important;
   font-size: 1.35rem !important;
   line-height: 28px !important;
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   margin-bottom: 5px !important;
   /* padding-top: 10px !important;
   margin-top: 20px !important; */
@@ -599,13 +656,28 @@ a,
 
 .gsc-refinementHeader {
   background-color: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 999px !important;
+  color: var(--foreground) !important;
+  padding: 6px 12px !important;
+  margin-right: 8px !important;
+}
+
+.gsc-refinementHeader.gsc-refinementhActive {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
 }
 
 .gsc-cursor-page {
   background-color: transparent !important;
 
-  color: var(--color-text);
+  color: var(--foreground);
   font-size: 1.2rem;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  margin-right: 6px !important;
 }
 
 .gsc-results .gsc-cursor-box {
@@ -623,10 +695,19 @@ table.gsc-completion-container {
   border: 1px solid var(--border);
 }
 
+.gssb_c {
+  z-index: 1000 !important;
+}
+
 /* 单元格样式 */
 table.gsc-completion-container td {
   padding: 12px;
   transition: background-color 0.3s, color 0.3s;
+}
+
+table.gsc-completion-container td:hover,
+table.gsc-completion-container .gssb_i {
+  background: var(--muted) !important;
 }
 
 /* 字体样式 */
