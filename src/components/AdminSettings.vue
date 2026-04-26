@@ -10,6 +10,7 @@
           <LayoutDashboard :size="16" />
           后台
         </Button>
+        <ThemeToggle />
         <Button variant="ghost" @click="handleLogout">
           <LogOut :size="16" />
           退出
@@ -124,6 +125,7 @@ import TabsContent from '@/components/ui/TabsContent.vue'
 import TabsList from '@/components/ui/TabsList.vue'
 import TabsTrigger from '@/components/ui/TabsTrigger.vue'
 import Toast from '@/components/ui/Toast.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 
 const router = useRouter()
 const saving = ref(false)
@@ -189,4 +191,3 @@ onMounted(async () => {
   }
 })
 </script>
-

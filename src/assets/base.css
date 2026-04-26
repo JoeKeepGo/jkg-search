@@ -23,6 +23,7 @@
 
 /* semantic color variables for this project */
 :root {
+  color-scheme: light;
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
@@ -46,11 +47,13 @@
   --uv-styles-color-primary: #007bff;
   --uv-styles-color-text-primary: #007bff;
   --uv-styles-color-text-emphasis: #212529;
-  --uv-styles-color-text-default: #495057;
-  --uv-styles-color-text-de-emphasis: #6c757d;
+  --uv-styles-color-text-default: #374151;
+  --uv-styles-color-text-de-emphasis: #6b7280;
   --uv-styles-color-visited-link: #551A8B;
 
   --divider-color: #dfe1e5;
+  --title-color: #1d4ed8;
+  --link-color: #2563eb;
 
   --background: #ffffff;
   --foreground: #111827;
@@ -70,7 +73,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
+    color-scheme: dark;
     --color-background: var(--vt-c-black);
     --color-background-soft: var(--vt-c-black-soft);
     --color-background-mute: var(--vt-c-black-mute);
@@ -107,6 +111,44 @@
   }
 }
 
+:root.dark {
+  color-scheme: dark;
+  --color-background: var(--vt-c-black);
+  --color-background-soft: var(--vt-c-black-soft);
+  --color-background-mute: var(--vt-c-black-mute);
+
+  --color-border: var(--vt-c-divider-dark-2);
+  --color-border-hover: var(--vt-c-divider-dark-1);
+
+  --color-heading: var(--vt-c-text-dark-1);
+  --color-text: var(--vt-c-text-dark-2);
+
+  --uv-styles-color-text-default: #d4d4d8;
+  --uv-styles-color-text-de-emphasis: #a1a1aa;
+
+  --title-color: #93c5fd;
+  --link-color: #d4d4d8;
+  --uv-styles-color-visited-link: #c4b5fd;
+
+  --divider-color: #3f4145;
+
+  --background: #0f1115;
+  --foreground: #f4f4f5;
+  --muted: #1f2937;
+  --muted-foreground: #a1a1aa;
+  --card: #171a21;
+  --card-foreground: #f4f4f5;
+  --border: #2f3542;
+  --input: #2f3542;
+  --primary: #f4f4f5;
+  --primary-foreground: #111827;
+  --secondary: #242936;
+  --secondary-foreground: #f4f4f5;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --ring: #60a5fa;
+}
+
 *,
 *::before,
 *::after {
@@ -116,8 +158,8 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
+  color: var(--foreground);
+  background: var(--background);
   transition:
     color 0.5s,
     background-color 0.5s;

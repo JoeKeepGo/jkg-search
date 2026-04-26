@@ -1,13 +1,17 @@
 <template>
   <main class="search-home">
     <header class="public-nav">
-      <Button as="a" href="https://luxirty.com/posts/luxirty-search/" target="_blank" variant="ghost">
-        关于
-      </Button>
-      <Button as="a" href="/login" variant="outline">
-        <Settings :size="16" />
-        后台
-      </Button>
+      <div class="public-brand">{{ siteTitle }}</div>
+      <div class="public-actions">
+        <Button as="a" href="https://luxirty.com/posts/luxirty-search/" target="_blank" variant="ghost">
+          关于
+        </Button>
+        <ThemeToggle />
+        <Button as="a" href="/login" variant="outline">
+          <Settings :size="16" />
+          后台
+        </Button>
+      </div>
     </header>
 
     <section class="home-search-panel">
@@ -16,10 +20,16 @@
         <p>基于 Google Programmable Search Element 的轻量搜索。</p>
       </div>
 
-      <Card class="public-search-card">
-        <div class="gcse-searchbox-only" data-resultsUrl="search"></div>
+      <div class="public-search-surface">
+        <form class="public-search-form" @submit.prevent="submitSearch">
+          <Search :size="18" class="search-form-icon" />
+          <Input v-model="searchQuery" :placeholder="`搜索 ${siteTitle}`" autocomplete="off" autofocus />
+          <Button type="submit">
+            搜索
+          </Button>
+        </form>
         <p v-if="cseError" class="cse-error">{{ cseError }}</p>
-      </Card>
+      </div>
     </section>
 
     <footer class="public-footer">
@@ -34,20 +44,23 @@
 </template>
 
 <script>
-import { Settings } from 'lucide-vue-next'
-import { loadGoogleCse } from '@/lib/google-cse'
+import { Search, Settings } from 'lucide-vue-next'
 import { getGooglePseSettings } from '@/lib/settings'
 import Button from '@/components/ui/Button.vue'
-import Card from '@/components/ui/Card.vue'
+import Input from '@/components/ui/Input.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 
 export default {
   components: {
     Button,
-    Card,
-    Settings
+    Input,
+    Search,
+    Settings,
+    ThemeToggle
   },
   data() {
     return {
+      searchQuery: '',
       siteTitle: 'Luxirty Search',
       cseError: ''
     }
@@ -59,13 +72,13 @@ export default {
 
     if (!settings.cx) {
       this.cseError = 'Google PSE CX 尚未配置'
-      return
     }
-
-    try {
-      await loadGoogleCse(settings.cx)
-    } catch {
-      this.cseError = 'Google PSE 加载失败'
+  },
+  methods: {
+    submitSearch() {
+      const query = this.searchQuery.trim()
+      if (!query) return
+      this.$router.push({ path: '/search', query: { q: query } })
     }
   }
 };
@@ -86,7 +99,24 @@ export default {
 .public-nav {
   width: min(960px, 100%);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.public-brand {
+  min-width: 0;
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.public-actions {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
@@ -117,9 +147,26 @@ export default {
   font-size: 16px;
 }
 
-.public-search-card {
+.public-search-surface {
   width: min(720px, 100%);
-  padding: 18px;
+  min-height: 54px;
+}
+
+.public-search-form {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid var(--input);
+  border-radius: 8px;
+  background: var(--card);
+  padding: 8px;
+}
+
+.search-form-icon {
+  color: var(--muted-foreground);
+  margin-left: 4px;
 }
 
 .cse-error {
@@ -150,11 +197,24 @@ export default {
   }
 
   .public-nav {
-    justify-content: space-between;
+    align-items: flex-start;
   }
 
   .home-title-block h1 {
     font-size: 36px;
+  }
+
+  .public-actions {
+    flex-shrink: 0;
+  }
+
+  .public-search-form {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .public-search-form .ui-button {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }
 </style>

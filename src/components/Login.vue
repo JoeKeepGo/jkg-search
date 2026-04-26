@@ -1,5 +1,8 @@
 <template>
   <main class="auth-page">
+    <div class="auth-toolbar">
+      <ThemeToggle />
+    </div>
     <Card class="auth-card">
       <div class="auth-header">
         <h1>管理员登录</h1>
@@ -36,6 +39,7 @@ import { login } from '@/lib/api'
 import Button from '@/components/ui/Button.vue'
 import Card from '@/components/ui/Card.vue'
 import Input from '@/components/ui/Input.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,4 +62,3 @@ async function submit() {
   }
 }
 </script>
-

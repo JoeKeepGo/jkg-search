@@ -4,13 +4,22 @@
       <Button class="search-title" variant="ghost" @click="goHome">
         {{ siteTitle }}
       </Button>
-      <Card class="results-search-card">
-        <div class="gcse-searchbox"></div>
-      </Card>
-      <Button as="a" href="/login" variant="outline">
-        <Settings :size="16" />
-        后台
-      </Button>
+      <div class="results-search-surface">
+        <form class="results-search-form" @submit.prevent="submitSearch">
+          <Search :size="18" class="search-form-icon" />
+          <Input v-model="searchQuery" autocomplete="off" />
+          <Button type="submit">
+            搜索
+          </Button>
+        </form>
+      </div>
+      <div class="results-actions">
+        <ThemeToggle />
+        <Button as="a" href="/login" variant="outline">
+          <Settings :size="16" />
+          后台
+        </Button>
+      </div>
     </header>
 
     <section class="search-result-zone">
@@ -30,22 +39,26 @@
 </template>
 
 <script>
-import { Settings } from 'lucide-vue-next'
-import { loadGoogleCse } from '@/lib/google-cse'
+import { Search, Settings } from 'lucide-vue-next'
+import { loadGoogleCse, renderGoogleCse } from '@/lib/google-cse'
 import { getGooglePseSettings } from '@/lib/settings'
 import Button from '@/components/ui/Button.vue'
-import Card from '@/components/ui/Card.vue'
+import Input from '@/components/ui/Input.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 
 export default {
   name: 'SearchPage',
   components: {
     Button,
-    Card,
-    Settings
+    Input,
+    Search,
+    Settings,
+    ThemeToggle
   },
   props: ['query'],
   data() {
     return {
+      searchQuery: this.query || '',
       siteTitle: 'Luxirty Search',
       cseError: ''
     }
@@ -71,9 +84,16 @@ export default {
       this.cseError = 'Google PSE 加载失败'
     }
   },
+  beforeRouteUpdate(to) {
+    this.searchQuery = to.query.q || ''
+    this.$nextTick(() => {
+      renderGoogleCse()
+      this.setTitle()
+    })
+  },
   methods: {
     setTitle() {
-      const inputContent = document.getElementsByName('search')[0]?.value || this.query;
+      const inputContent = this.searchQuery || this.query;
       document.title = inputContent + ' - ' + this.siteTitle
     },
     goHome() {
@@ -102,6 +122,11 @@ export default {
           rendered: myWebResultsRenderedCallback,
         },
       };
+    },
+    submitSearch() {
+      const query = this.searchQuery.trim()
+      if (!query) return
+      this.$router.push({ path: '/search', query: { q: query } })
     }
   }
 };
@@ -138,10 +163,32 @@ export default {
   font-weight: 700;
 }
 
-.results-search-card {
+.results-search-surface {
   flex: 1;
   min-width: 0;
+}
+
+.results-search-form {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid var(--input);
+  border-radius: 8px;
+  background: var(--card);
   padding: 8px;
+}
+
+.search-form-icon {
+  color: var(--muted-foreground);
+  margin-left: 4px;
+}
+
+.results-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* 针对小屏幕的样式 */
@@ -155,6 +202,19 @@ export default {
 
   .search-title {
     align-self: center;
+  }
+
+  .results-actions {
+    justify-content: center;
+  }
+
+  .results-search-form {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .results-search-form .ui-button {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }
 

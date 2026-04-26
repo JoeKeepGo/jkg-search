@@ -221,6 +221,13 @@
   color: var(--foreground);
 }
 
+.auth-toolbar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
 .auth-card {
   width: min(420px, 100%);
 }
@@ -358,7 +365,7 @@ a,
 
 
 .gcse-searchbox {
-  flex-grow: 1;
+  width: 100%;
 }
 
 .search-divider {
@@ -387,7 +394,7 @@ a,
 .gsc-input-box .gsc-input,
 .gsc-input-box .gsc-input:focus {
   background-color: transparent !important;
-  color: var(--uv-styles-color-text-default) !important;
+  color: var(--foreground) !important;
   font-size: 16px !important;
 }
 
@@ -409,18 +416,18 @@ a,
   position: relative;
   min-height: 44px;
   border: 1px solid var(--input);
-  background: var(--background);
+  background: var(--card);
   box-shadow: none;
   border-radius: 8px;
   margin: 0 auto;
   padding-left: 12px;
   padding-right: 12px;
-  width: 692px;
+  width: min(692px, 100%);
   height: 46px;
 }
 
 .gsc-search-box-tools:hover {
-  background: var(--background);
+  background: var(--card);
   box-shadow: none;
   border-color: var(--ring);
   border-radius: 8px;
@@ -429,21 +436,20 @@ a,
 /* 针对小屏幕的样式 */
 @media (max-width: 600px) {
   .gsc-search-box.gsc-search-box-tools {
-    width: calc(100vw - 28px);
+    width: 100%;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   .gsc-search-box.gsc-search-box-tools {
-    background: var(--background);
+    background: var(--card);
     box-shadow: none;
     border: 1px solid var(--input);
   }
 
   .gsc-input-box .gsc-input,
   .gsc-input-box .gsc-input:focus {
-    color: #ffffff !important;
-    /* 将文本颜色设为白色以适配深色背景 */
+    color: var(--foreground) !important;
   }
 
   .gsc-search-button-v2 {
@@ -464,8 +470,9 @@ a,
 .gsc-results,
 .gsc-webResult {
   background-color: transparent !important;
-  width: 652px !important;
-  margin-left: calc((100vw - 652px) / 2);
+  width: min(760px, calc(100vw - 32px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* 针对小屏幕的样式 */
@@ -473,8 +480,9 @@ a,
 
   .gsc-results,
   .gsc-webResult {
-    width: calc(100vw - 20px) !important;
-    margin-left: 10px;
+    width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
@@ -511,14 +519,14 @@ a,
 }
 
 .gs-snippet {
-  color: var(--uv-styles-color-text-default) !important;
+  color: var(--foreground) !important;
   font-size: 16px !important;
   line-height: 1.5 !important;
   margin-bottom: 8px !important;
 }
 
 .gs-visibleUrl {
-  color: var(--uv-styles-color-text-de-emphasis) !important;
+  color: var(--muted-foreground) !important;
   font-size: 14px !important;
 }
 
@@ -545,24 +553,30 @@ a,
 }
 
 .gsc-refinementBlock {
-  margin-left: calc((100vw - 652px) / 2);
+  width: min(760px, calc(100vw - 32px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   background-color: transparent !important;
 }
 
 .gsc-above-wrapper-area-container {
-  width: 652px !important;
-  margin-left: calc((100vw - 652px) / 2);
+  width: min(760px, calc(100vw - 32px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* 针对小屏幕的样式 */
 @media (max-width: 600px) {
   .gsc-refinementBlock {
-    margin-left: 5px;
+    width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   .gsc-above-wrapper-area-container {
-    width: auto !important;
-    margin-left: 5px;
+    width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
@@ -601,60 +615,39 @@ a,
 
 /* 表格容器样式 */
 table.gsc-completion-container {
-  width: 601px;
-  /* 保持原有宽度 */
-  position: absolute;
-  /* 保持绝对定位 */
-  left: 203px;
-  /* 保持原有左边距 */
-  top: 69px;
-  /* 保持原有顶部距离 */
-  background-color: #ffffff;
-  /* 默认背景色 */
-  border-radius: 4px;
-  /* 边角圆润 */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  /* 添加阴影效果 */
+  width: min(620px, calc(100vw - 32px)) !important;
+  background-color: var(--card);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  /* 添加轻微阴影效果 */
-  border: 1px solid transparent;
-  /* 设置透明边框，以避免默认边框影响 */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--border);
 }
 
 /* 单元格样式 */
 table.gsc-completion-container td {
   padding: 12px;
-  /* 内边距 */
   transition: background-color 0.3s, color 0.3s;
-  /* 背景和文字色变换效果 */
 }
 
 /* 字体样式 */
 table.gsc-completion-container span {
-  color: #333;
-  /* 默认文字颜色 */
+  color: var(--foreground);
   font-size: 16px;
-  /* 字体大小 */
 }
 
 /* 黑暗模式样式 */
 @media (prefers-color-scheme: dark) {
   table.gsc-completion-container {
-    background-color: #1e1e1e;
-    /* 黑暗模式背景色 */
+    background-color: var(--card);
   }
 
   table.gsc-completion-container td {
-    background-color: #1e1e1e;
-    /* 黑暗模式单元格背景色 */
-    color: #f0f0f0;
-    /* 黑暗模式文字色 */
+    background-color: var(--card);
+    color: var(--foreground);
   }
 
   table.gsc-completion-container span {
-    color: #f0f0f0;
-    /* 黑暗模式文字色 */
+    color: var(--foreground);
   }
 }
 
@@ -664,7 +657,7 @@ table.gsc-completion-container span {
 }
 
 .gsc-result-info {
-  color: #676767;
+  color: var(--muted-foreground);
   font-size: 13px;
   margin: 0;
   padding: 4px 4px 4px 4px;

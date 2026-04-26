@@ -194,3 +194,23 @@ Verification:
 
 - `pnpm build` passed after the UI changes.
 - `git diff --check` passed.
+
+## 2026-04-26: Public search UI hardening and theme control
+
+Goal: fix public search page layout bugs and improve dark-mode readability by moving the visible search input fully under local shadcn-style control.
+
+Changes:
+
+- Home and results pages now use local `Input` + `Button` search forms instead of the Google CSE-generated searchbox UI.
+- Google PSE Element remains the search/result backend; it now primarily renders `.gcse-searchresults`.
+- Removed old fixed CSE offsets such as hardcoded autocomplete `left`, fixed result `margin-left`, and rigid result widths.
+- Results/refinements now use centered responsive widths.
+- Added `src/lib/theme.js` with `system`, `light`, and `dark` modes saved in `localStorage`.
+- Added `src/components/ThemeToggle.vue`.
+- Theme toggle is available on public search pages, login, and admin pages.
+- Backend `site_title` already exists in `/admin/settings`; public title and search placeholders now use the runtime value returned by `/api/settings/google-pse`.
+
+Verification:
+
+- `pnpm build` passed.
+- `git diff --check` passed.
